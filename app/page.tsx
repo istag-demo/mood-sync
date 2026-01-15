@@ -5,23 +5,21 @@ import { motion } from 'framer-motion';
 export default function MoodSync() {
   const [text, setText] = useState("");
   const [vibeScore, setVibeScore] = useState(0);
-  const [mounted, setMounted] = useState(false); // New: Check if browser is ready
+  const [mounted, setMounted] = useState(false);
   const [mood, setMood] = useState({ 
     color: "from-gray-900 to-black", 
     label: "Idle", 
     emoji: "⌨️" 
   });
 
-  // 1. Only run this on the client (browser)
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 2. Run the logic only when text changes AND we are on the client
   useEffect(() => {
     if (!mounted) return;
 
-    // We import sentiment INSIDE the useEffect so Vercel's server doesn't see it
     const Sentiment = require('sentiment');
     const analyzer = new Sentiment();
     
@@ -41,7 +39,6 @@ export default function MoodSync() {
     }
   }, [text, mounted]);
 
-  // Prevent "Hydration Mismatch" errors on Vercel
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
